@@ -19,3 +19,6 @@
   .site-layout .site-layout-background {
     background: #fff;
   }
+  #root, .ant-layout{/* 这里控制layout的样式, 之所以这么写,可以看控制台的元素*/
+    height: 100%;
+}

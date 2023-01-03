@@ -4,7 +4,7 @@ import Login from '../views/Login'
 import NewSandBox from '../views/sandbox/NewSandBox'
 export default function index() {
   return (
-    <div>
+
         <HashRouter>
             <Switch>
           <Route path={'/'}render={()=>{
@@ -13,6 +13,6 @@ export default function index() {
           <Route path={'/login'} component={Login}/>
           </Switch>
         </HashRouter>
-    </div>
+   
   )
 }

@@ -12,7 +12,6 @@ import './NewsSandBox.css'
 const { Content } = Layout;
 export default function NewSandBox() {
     return (
-        <div>
             <Layout style={{position:'top:0 bottom:0 left:0 right:0 '}}>
                 <SideMenu />
                 <Layout className="site-layout">
@@ -37,16 +36,5 @@ export default function NewSandBox() {
                 </Layout>
 
             </Layout>
-
-
-
-
-
-
-
-
-
-
-        </div>
     )
 }
