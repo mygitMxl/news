@@ -18,7 +18,6 @@ function SideMenu(props) {
       console.log(res.data);
       setMenu(res.data)
     })
-    console.log(props);
   }, [])
   /*  判断pagepermisson是否有*/
   const checkPagePermission = (item) => {
@@ -48,7 +47,7 @@ function SideMenu(props) {
     })
   }
   /* 高亮 */
-  console.log(props.location.pathname);
+ 
   const selectKeys = [props.location.pathname]
   /* 默认展开 */
   const defaultOpenKeys= ['/'+props.location.pathname.split('/')[1]] /* 用于defaultOpenKeys,初始状态展开,只取一级路径 */
