@@ -1,36 +1,68 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Layout, Menu } from 'antd';
 import {
-    UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
-  } from '@ant-design/icons';
-  import './SideMenu.css'
+  UserOutlined,
+} from '@ant-design/icons';
+import './SideMenu.css'
 import axios from 'axios';
-const {  Sider } = Layout;
+import SubMenu from 'antd/lib/menu/SubMenu';
+import { withRouter } from 'react-router-dom';
 
-export default function SideMenu() {
-  const [menu, setmenu] = useState([])
+const { Sider } = Layout;
+
+function SideMenu(props) {
+  const [menu, setMenu] = useState([])
+  /* 获取数据 */
   useEffect(() => {
-  axios.get('http://localhost:8000/rights?_embed=children')
-  .then(res=>{
-    console.log(res.data)
-  })
+    axios.get('/rights?_embed=children').then(res => {/* 向下合并 */
+      console.log(res.data);
+      setMenu(res.data)
+    })
+    console.log(props);
   }, [])
-  
-  const renderMenu=()=>{
-
+  /*  判断pagepermisson是否有*/
+  const checkPagePermission = (item) => {
+    return item.pagepermisson
   }
-    return (
-        <Sider trigger={null} collapsible >
-        <div style={{display:"flex",height:"100%","flexDirection":"column"}}>    {/* flexDirection===flex-Direction 设置滚动条 样式在APP.css中 */}
+  /* iconlist 图标 */
+  const iconList = {
+    "/home": <UserOutlined />,
+    "/user-manage": <UserOutlined />,
+    "/user-manage/list": <UserOutlined />,
+    "/right-manage": <UserOutlined />,
+    "/right-manage/role/list": <UserOutlined />,
+    "/right-manage/right/list": <UserOutlined />
+    //.......
+  }
+  const renderMenu = (menuList) => {
+    return menuList.map(item => {
+      if (item.children?.length>0 && checkPagePermission(item)) {
+        return <SubMenu key={item.key} title={item.title} icon={iconList[item.key]}>
+          {renderMenu(item.children)}
+        </SubMenu>
+      }
+      return checkPagePermission(item) && <Menu.Item key={item.key} icon={iconList[item.key]} onClick={() => {
+        //  console.log(props)
+        props.history.push(item.key)
+      }}>{item.title}</Menu.Item>
+    })
+  }
+  /* 高亮 */
+  console.log(props.location.pathname);
+  const selectKeys = [props.location.pathname]
+  /* 默认展开 */
+  const defaultOpenKeys= ['/'+props.location.pathname.split('/')[1]] /* 用于defaultOpenKeys,初始状态展开,只取一级路径 */
+  return (
+    <Sider trigger={null} collapsible >
+      <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>    {/* flexDirection===flex-Direction ,column主轴变成垂直方向,设置滚动条 样式在APP.css中 */}
         <div className="logo">全球新闻管理系统</div>
-        <div style={{flex:1,overflow:'auto'}}>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-        {renderMenu(menu)}   
-        </Menu>
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <Menu theme="dark" mode="inline" selectedKeys={selectKeys} defaultOpenKeys={defaultOpenKeys}>{/* SelectedKeys选中谁谁高亮 */}
+            {renderMenu(menu)}
+          </Menu>
         </div>
-        </div>
-      </Sider>
-    )
+      </div>
+    </Sider>
+  )
 }
+export default withRouter(SideMenu)
