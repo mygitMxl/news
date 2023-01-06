@@ -2,10 +2,12 @@ import React, { useRef, useState, useEffect } from 'react'
 import { Button, Form, PageHeader, Steps, Input, Select } from 'antd'
 import style from './News.module.css'
 import axios from 'axios'
+import NewsEditor from '../../../components/news-message/NewsEditor'
 const { Option } = Select;
 export default function NewsAdd() {
     const [current, setcurrent] = useState(0)
-    const [categories, setcategories] = useState([])
+    const [categories, setcategories] = useState([])/* 新闻类型 */
+    const [context, setcontext] = useState('')/* 富文本编辑器内容 */
     const NewsForm = useRef()
     useEffect(() => {
         axios.get('/categories ')
@@ -83,14 +85,9 @@ export default function NewsAdd() {
             </div>
 
             <div className={current === 1 ? '' : style.active}>
-
+             <NewsEditor getContent={(value)=>{setcontext(value)}}/>
             </div>
             <div className={current === 2 ? '' : style.active}>3333</div>
-
-
-
-
-
             <div style={{ marginTop: '50px' }}>
                 {
                     current === 2 &&
