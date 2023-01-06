@@ -19,9 +19,10 @@ function SideMenu(props) {
       setMenu(res.data)
     })
   }, [])
+  const {role:{rights}}=JSON.parse(localStorage.getItem('token'))
   /*  判断pagepermisson是否有*/
   const checkPagePermission = (item) => {
-    return item.pagepermisson
+    return item.pagepermisson&&rights.includes(item.key)/* 当前登录用户,role中的rights包含item中的key也就是权限 */
   }
   /* iconlist 图标 */
   const iconList = {

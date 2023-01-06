@@ -9,20 +9,30 @@ export default function RightList() {
     const [dataSource, setdataSource] = useState([])/* 角色列表信息 */
     const [setisModalVisible,setsetisModalVisible] = useState(false)/* 添加用户model开关 */
     const [isUpdateVisible, setisUpdateVisible] = useState(false)
-    const [region, setregion] = useState([])/* 区域信息 */
+    const [regionList, setregion] = useState([])/* 区域信息 */
     const [roleList, setroleList] = useState([])/* 角色列表 */
     const [isUpdateDisabled, setisUpdateDisabled] = useState(false)
     const [currentId, setcurrentId] = useState(null)
     const user=useRef()
     const update=useRef()
+
+    const {roleId,region,username}=JSON.parse(localStorage.getItem("token"))
+
     useEffect(() => {
-        axios.get('/users?_expand=role')
-            .then(res => {
-                // console.log(res.data);
-                let list = res.data
-                setdataSource(list)
-            })
-    }, [])
+        const roleObj = {
+            "1":"superadmin",
+            "2":"admin",
+            "3":"editor"
+        }
+        axios.get("/users?_expand=role").then(res => {
+            const list = res.data
+            console.log(list);
+            setdataSource( roleObj[roleId]==="superadmin"?list:[/* 也就是说roleId=1的时候 拿到所有list*/
+            ...list.filter(item=>item.username===username),//token中自己的名字
+            ...list.filter(item=>item.region===region&& roleObj[item.roleId]==="editor")//和同一地区的区域编辑的角色
+        ])
+        })
+    }, [roleId,region,username])
     useEffect(() => {
       axios.get('/regions')
       .then(res=>{
@@ -35,18 +45,12 @@ export default function RightList() {
         setroleList(res.data)
        })
      }, [])
-     
-    
-
-
-
-
     const columns = [
         {
             title: '区域',
             dataIndex: 'region',
             filters:[
-                ...region.map(item=>({
+                ...regionList.map(item=>({
                     text:item.title,/* 所有地域数据 */
                     value:item.value
                 })),
@@ -193,7 +197,7 @@ export default function RightList() {
                 onOk={handleOk}
                 onCancel={() => { setsetisModalVisible(false);user.current.resetFields()}}
             >
-                <UserForm regionList={region} roleList={roleList} ref={user} />
+                <UserForm regionList={regionList} roleList={roleList} ref={user} />
             </Modal>
 
             <Modal
@@ -204,7 +208,7 @@ export default function RightList() {
                 onOk={handleUpdate}
                 onCancel={() => {setisUpdateVisible(false);update.current.resetFields();setisUpdateDisabled(!isUpdateDisabled)}}/*!isUpdateDisabled:取消后让选择了超级管理员的地域变回最初始的样子 */
             >
-                <UserForm regionList={region} roleList={roleList} ref={update} isUpdateDisabled={isUpdateDisabled}/>
+                <UserForm regionList={regionList} roleList={roleList} ref={update} isUpdateDisabled={isUpdateDisabled} isUpdate={true} />
                 </Modal>
         </div>
     )

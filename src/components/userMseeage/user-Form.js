@@ -7,7 +7,44 @@ const { Option } = Select;
     useEffect(() => {
         setisDisabled(props.isUpdateDisabled)
     }, [props.isUpdateDisabled])
-    
+    const {roleId,region}  = JSON.parse(localStorage.getItem("token"))
+    const roleObj = {
+        "1":"superadmin",
+        "2":"admin",
+        "3":"editor"
+    }
+    /* region禁用 */
+    const checkRegionDisabled=(item)=>{
+      if(props.isUpdate){/* 如果是更新按钮 */
+        if(roleObj[roleId]==='superadmin'){
+          return false
+        }else{
+            return true
+        }
+      }else{
+        if(roleObj[roleId]==='superadmin'){
+            return false
+          }else{
+              return item.value!==region
+          }
+      }
+    }
+    /* role禁用 */
+    const checkRoleDisabled=(item)=>{
+        if(props.isUpdate){/* 如果是更新按钮 */
+        if(roleObj[roleId]==='superadmin'){
+          return false
+        }else{
+            return true
+        }
+      }else{
+        if(roleObj[roleId]==='superadmin'){
+            return false
+          }else{
+            return roleObj[item.id]!=="editor"//item.id就是roleId,也就是roleId不等于3的时候禁用
+          }
+      }
+    }
     return (
         <Form  layout="vertical"  ref={ref}>
             <Form.Item
@@ -32,7 +69,7 @@ const { Option } = Select;
                 <Select disabled={isDisable}>
                     {
                         regionList.map(item => {
-                            return <Option key={item.id} value={item.value}>{item.title}</Option>
+                            return <Option key={item.id} value={item.value} disabled={checkRegionDisabled(item)}>{item.title}</Option>
                         })
                     }
                 </Select>
@@ -53,7 +90,7 @@ const { Option } = Select;
                 }}> 
                     {
                         roleList.map(item => {
-                            return <Option key={item.id} value={item.roleType}>{item.roleName}</Option>
+                            return <Option key={item.id} value={item.roleType} disabled={checkRoleDisabled(item)}>{item.roleName}</Option>
                         })
                     }
                 </Select>
