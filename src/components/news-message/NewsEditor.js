@@ -15,7 +15,7 @@ export default function NewsEditor(props) {
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
         const editorState = EditorState.createWithContent(contentState);
-        seteditorState(editorState)
+        seteditorState(editorState)/* 通过提交的新闻初始化内容 */
       }
   },[props.content])
     

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Table, Modal} from 'antd'
+import { Button, Table, Modal,notification} from 'antd'
 import axios from 'axios'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined,UploadOutlined } from '@ant-design/icons'
 const { confirm } = Modal
@@ -50,13 +50,11 @@ export default function NewsDraft(props) {
                       props.history.push(`/news-manage/update/${item.id}`)
                     }}/>
 
-                    <Button type="primary" shape="circle" icon={<UploadOutlined />} />
+                    <Button type="primary" shape="circle" icon={<UploadOutlined />} onClick={()=>handleCheck(item)}/>
                 </div>
             }
         }
     ];
-
-
     const confirmMethod = (item) => {
         console.log(item);
         confirm({
@@ -77,6 +75,21 @@ export default function NewsDraft(props) {
         // 当前页面同步状态 + 后端同步
         setdataSource(dataSource.filter(data => data.id !== item.id))
         axios.delete(`/news/${item.id}`)
+    }
+    /* 新闻提交 */
+    const handleCheck=(item)=>{
+        axios.patch(`/news/${item.id}`,{
+            auditState:1
+        }).then(res=>{
+            props.history.push('/audit-manage/list')
+            notification.info({
+                message: `通知`,
+                description:
+                  `您可以到${'审核列表'}中查看您的新闻`,
+                placement:"bottomRight"
+            });
+        })
+
     }
 
     return (
