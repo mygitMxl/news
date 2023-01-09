@@ -95,7 +95,6 @@ export default function NewsDraft(props) {
     const handleCheck=(item)=>{
         axios.patch(`/news/${item.id}`,{
             auditState:1,
-            publishState:1
         }).then(res=>{
             console.log(res.data);
             props.history.push('/audit-manage/list')
