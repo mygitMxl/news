@@ -14,6 +14,7 @@ import Unpublished from '../../views/sandbox/publish-manage/Unpublished'
 import Published from '../../views/sandbox/publish-manage/Published'
 import Sunset from '../../views/sandbox/publish-manage/Sunset'
 import NewsPreview from '../../views/sandbox/news-manage/NewsPreview'
+import NewsUpdate from '../../views/sandbox/news-manage/NewsUpdate'
 import axios from 'axios'
 export default function NewRouter() {
     const [backRouteList, setbackRouteList] = useState([])//后端返回的路由列表
@@ -26,6 +27,7 @@ export default function NewRouter() {
         "/news-manage/draft": NewsDraft,//草稿箱
         "/news-manage/category": NewsCategory,//新闻分类
         "/news-manage/preview/:id":NewsPreview,/* 草稿列表详情路径 */
+        "/news-manage/update/:id":NewsUpdate,/* 新闻更新详情页 */
         "/audit-manage/audit": Audit,//审核新闻
         "/audit-manage/list": AuditList,//审核列表
         "/publish-manage/unpublished": Unpublished,//待发布
