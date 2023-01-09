@@ -94,8 +94,10 @@ export default function NewsDraft(props) {
     /* 新闻提交 */
     const handleCheck=(item)=>{
         axios.patch(`/news/${item.id}`,{
-            auditState:1
+            auditState:1,
+            publishState:1
         }).then(res=>{
+            console.log(res.data);
             props.history.push('/audit-manage/list')
             notification.info({
                 message: `通知`,

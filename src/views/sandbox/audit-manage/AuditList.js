@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Table, Tag, Button } from 'antd'
-export default function AuditList() {
+import { Table, Tag, Button,notification } from 'antd'
+export default function AuditList(props) {
     const [dataSource, setdataSource] = useState([])
     const { username } = JSON.parse(localStorage.getItem('token'))
-    useEffect(() => {/* _ne：代表不等于;_lte:小于;_gte:大于 */
+    useEffect(() => {/* _ne：代表不等于;_lte:小于等于;_gte:大于 */
         axios(`/news?author=${username}&auditState_ne=0&publishState_lte=1`).then(res => {
             console.log(res.data)
             setdataSource(res.data)
@@ -14,6 +14,9 @@ export default function AuditList() {
         {
             title: '新闻标题',
             dataIndex: 'title',
+            render(title,item){
+              return <a href={`#/news-manage/preview/${item.id}`}>{title}</a>
+            }
         },
         {
             title: '作者',
@@ -55,22 +58,55 @@ export default function AuditList() {
             render: (item) => {
                 return <div>
                     {
-                        item.auditState === 1 && <Button  >撤销</Button>
+                        item.auditState === 1 && <Button onClick={()=>{handleRervert(item)} }>撤销</Button>
                     }
                     {
-                        item.auditState === 2 && <Button danger>发布</Button>
+                        item.auditState === 2 && <Button danger onClick={()=>{handlePublish(item)}}>发布</Button>
                     }
                     {
-                        item.auditState === 3 && <Button type="primary" >更新</Button>
+                        item.auditState === 3 && <Button type="primary" onClick={()=>{handleUpdate(item)}}>更新</Button>
                     }
                 </div>
             }
         }
 
     ]
+    /* 撤销 */
+   const  handleRervert=(item)=>{
+      setdataSource(dataSource.filter(data=>data.id!==item.id))
+      axios.patch(`/news/${item.id}`,{
+        auditState:0
+      })
+      .then(res=>{
+        notification.info({
+            message: `通知`,
+            description:
+              `您可以到草稿箱中查看您的新闻`,
+            placement:"bottomRight"
+        });
+      })
+   }
+   /* 更新 */
+   const handleUpdate = (item)=>{
+    props.history.push(`/news-manage/update/${item.id}`)
+}
+   /* 发布 */
+   const handlePublish=(item)=>{
+      axios.patch(`/news/${item.id}`,{
+        'publishState':2
+      }).then(res=>{
+        props.history.push('/publish-manage/published')
+        notification.info({
+            message: `通知`,
+            description:
+              `您可以到【发布管理/已经发布】中查看您的新闻`,
+            placement:"bottomRight"
+        });
+      })
+   }
     return (
         <div>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table dataSource={dataSource} columns={columns} pagination={{pageSize:5}} rowKey={item=>item.id} />
         </div>
     )
 }
