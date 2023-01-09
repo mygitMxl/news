@@ -18,6 +18,7 @@ export default function NewsAdd(props) {
         if (current === 0) {
             NewsForm.current.validateFields().then(res => {
                 setformInfo(res)
+                console.log(res);
                 setCurrent(current + 1)
             }).catch(error => {
                 console.log(error)
@@ -50,10 +51,8 @@ export default function NewsAdd(props) {
 
 
     const handleSave = (auditState) => {
-
         axios.post('/news', {
-            "title":formInfo.title,
-            "category":formInfo.category,
+            ...formInfo,
             "content": content,
             "region": User.region?User.region:"全球",
             "author": User.username,
@@ -120,10 +119,8 @@ export default function NewsAdd(props) {
                                 }
                             </Select>
                         </Form.Item>
-
                     </Form>
                 </div>
-
                 <div className={current === 1 ? '' : style.active}>
                     <NewsEditor getContent={(value) => {
                         // console.log(value)
@@ -131,7 +128,6 @@ export default function NewsAdd(props) {
                     }}></NewsEditor>
                 </div>
                 <div className={current === 2 ? '' : style.active}></div>
-
             </div>
             <div style={{ marginTop: "50px" }}>
                 {

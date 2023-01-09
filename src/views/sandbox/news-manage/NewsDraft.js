@@ -34,13 +34,28 @@ export default function NewsDraft(props) {
             title: '作者',
             dataIndex: 'author'
         },
-        // {
-        //     title: '分类',
-        //     dataIndex: 'category',
-        //     render:(category)=>{
-        //         return category.title
-        //     }
-        // },
+        {
+            title:'新闻分类',
+            dataIndex:'categoryId',
+            render(categoryId){
+              switch(categoryId){
+                case 1:
+                    return <div>时事新闻</div>
+                case 2:
+                    return <div>环球经济</div>    
+                case 3:
+                    return <div>科学技术</div>    
+                case 4:
+                    return <div>军事世界</div>    
+                case 5:
+                    return <div>世界体育</div>   
+                case 6:
+                    return <div>生活理财</div>    
+                 default:
+                    return ''   
+              }
+            }
+        },
         {
             title: "操作",
             render: (item) => {
@@ -89,9 +104,7 @@ export default function NewsDraft(props) {
                 placement:"bottomRight"
             });
         })
-
     }
-
     return (
         <div>
             <Table dataSource={dataSource} columns={columns}
