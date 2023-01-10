@@ -16,7 +16,9 @@ import Sunset from '../../views/sandbox/publish-manage/Sunset'
 import NewsPreview from '../../views/sandbox/news-manage/NewsPreview'
 import NewsUpdate from '../../views/sandbox/news-manage/NewsUpdate'
 import axios from 'axios'
-export default function NewRouter() {
+import { connect } from 'react-redux'
+import { Spin } from 'antd'
+function NewRouter(props) {
     const [backRouteList, setbackRouteList] = useState([])//后端返回的路由列表
     const LocalRouterMap = {
         "/home": Home,
@@ -54,6 +56,7 @@ export default function NewRouter() {
     }
     return (
         <div>
+            <Spin size="large" spinning={props.isLoading}>
             <Switch>
                 {
                  backRouteList.map(item=>{
@@ -69,6 +72,15 @@ export default function NewRouter() {
               {backRouteList.length>0&&<Route component={Nopermission}/>}{/* 数据还没回来时,就会到404.所以需要优化一下 */}
 
             </Switch>
+            </Spin>
         </div>
     )
 }
+
+const mapStateToProps = (state)=>{
+   return{
+    isLoading:state.loading.isLoading
+   }
+  }
+
+export default connect(mapStateToProps)(NewRouter)
