@@ -2,7 +2,7 @@
 
 var _axios = _interopRequireDefault(require("axios"));
 
-var _store = _interopRequireDefault(require("../views/redux/store"));
+var _store = require("../views/redux/store");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -11,7 +11,7 @@ _axios["default"].defaults.baseURL = 'http://localhost:8000';
 _axios["default"].interceptors.request.use(function (config) {
   // Do something before request is sent
   // 显示loading
-  _store["default"].dispatch({
+  _store.store.dispatch({
     type: "change_loading",
     payload: true
   });
@@ -26,7 +26,7 @@ _axios["default"].interceptors.request.use(function (config) {
 _axios["default"].interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-  _store["default"].dispatch({
+  _store.store.dispatch({
     type: "change_loading",
     payload: false
   }); //隐藏loading
@@ -36,7 +36,7 @@ _axios["default"].interceptors.response.use(function (response) {
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
-  _store["default"].dispatch({
+  _store.store.dispatch({
     type: "change_loading",
     payload: false
   }); //隐藏loading

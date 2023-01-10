@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "../views/redux/store";
+import {store} from "../views/redux/store";
 axios.defaults.baseURL='http://localhost:8000'
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent

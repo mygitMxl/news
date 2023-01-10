@@ -5,12 +5,17 @@ import App from './App';
 import './App.css'
 import './util/http'
 import { Provider } from 'react-redux';
-import store from './views/redux/store';
+ import { PersistGate} from 'redux-persist/integration/react'//引入持久化网关
+
+import {store,persistor} from './views/redux/store';
 // import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
 <Provider store={store}>
-<App/>
+<PersistGate loading={null} persistor={persistor}>
+  <App/>
+</PersistGate>
+
 </Provider>,
 document.getElementById('root'));
 
