@@ -6,15 +6,15 @@ import {
     UserOutlined
 } from '@ant-design/icons';
 import {withRouter} from 'react-router-dom'
+import { connect } from 'react-redux';
 
 const { Header } = Layout;
 
 function TopHeader(props) {
-    const [collapsed, setCollapsed] = useState(false)
     const changeCollapsed = () => {
-        setCollapsed(!collapsed)
+        props.dispatch({type:'change_collapsed'})
     }
- 
+  console.log(props);
      const {role:{roleName},username}=JSON.parse(localStorage.getItem('token'))
      /* role:{roleName}是role里面的roleName,嵌套了一层*/
     const menu = (
@@ -33,7 +33,7 @@ function TopHeader(props) {
     return (
         <Header className="site-layout-background" style={{ padding: '0 16px' }}>
             {
-                collapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
+               props.iscollapesed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
             }
 
             <div style={{ float: "right" }}>
@@ -46,4 +46,9 @@ function TopHeader(props) {
 
     )
 }
-export default withRouter(TopHeader)
+const mapStateToProps=(state)=>{
+  return{
+    iscollapesed:state.counter.iscollapesed
+  }
+}
+export default  connect(mapStateToProps,null) (withRouter(TopHeader))

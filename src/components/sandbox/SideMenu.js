@@ -7,6 +7,7 @@ import './SideMenu.css'
 import axios from 'axios';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const { Sider } = Layout;
 
@@ -53,7 +54,7 @@ function SideMenu(props) {
   /* 默认展开 */
   const defaultOpenKeys= ['/'+props.location.pathname.split('/')[1]] /* 用于defaultOpenKeys,初始状态展开,只取一级路径 */
   return (
-    <Sider trigger={null} collapsible >
+    <Sider trigger={null} collapsible collapsed={props.iscollapesed} >
       <div style={{ display: "flex", height: "100%", "flexDirection": "column" }}>    {/* flexDirection===flex-Direction ,column主轴变成垂直方向,设置滚动条 样式在APP.css中 */}
         <div className="logo">全球新闻管理系统</div>
         <div style={{ flex: 1, overflow: 'auto' }}>
@@ -65,4 +66,9 @@ function SideMenu(props) {
     </Sider>
   )
 }
-export default withRouter(SideMenu)
+const mapStateToProps=(state)=>{
+  return{
+    iscollapesed:state.counter.iscollapesed
+  }
+}
+export default  connect(mapStateToProps,null) (withRouter(SideMenu))
