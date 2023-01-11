@@ -30,7 +30,7 @@ export default function News() {
                     pagination={{
                       pageSize: 3
                     }}
-                    renderItem={data => <List.Item><a href={`#/detail/${data.id}`}>{data.title}</a></List.Item>}
+                    renderItem={data =><List.Item><a href={`#/detail/${data.id}`}>{data.title}</a></List.Item>}
                   />
                 </Card>
               </Col>
