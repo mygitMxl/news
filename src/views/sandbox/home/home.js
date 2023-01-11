@@ -75,7 +75,7 @@ export default function Home() {
     }
   }
   /* .................................................... */
-  //饼形图
+  //饼形图(个人信息)
   const renderPieView = () => {
     let currentList = allList.filter(item => item.author === username)
     let groupObj = _.groupBy(currentList, item => item.category.title)/* 将过滤好的数据分类 */
